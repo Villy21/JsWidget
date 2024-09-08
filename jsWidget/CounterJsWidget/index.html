@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Counter - JS-Widget</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<meta name="js-widget-title" content="Counter">
+
+<style type="text/css">
+    body {
+        font-family: -apple-system,'Helvetica Neue';
+        color:black;
+        display:block;
+        text-align:center;
+        font-size: 15px;
+        font-weight: bold;
+        margin:0;
+        text-decoration:none;
+        width:100%;
+        position: absolute;
+        height: 100vh;
+    }
+    .row {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .column {
+        margin:0;
+    }
+    .plus-btn {
+        text-decoration: none;
+        color: black;
+        width: 80vh;
+        aspect-ratio: 1;
+        background-color: green;
+        align-content: center;
+        border-radius: 18%;
+        font-size: 7vw;
+        margin: 20pt;
+        /* --wweb2-overlay-btn-color: rgba(255, 255, 51, 0.5); */
+        --wweb2-overlay-btn-press-color: rgba(0, 150, 0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 18%;
+        --wweb2-overlay-btn-padding: -1%;
+    }
+    .minus-btn {
+        text-decoration: none;
+        color: black;
+        width: 80vh;
+        aspect-ratio: 1;
+        background-color: red;
+        align-content: center;
+        border-radius: 18%;
+        font-size: 7vw;
+        margin: 20pt;
+        /* --wweb2-overlay-btn-color: rgba(255, 0, 255, 0.5); */
+        --wweb2-overlay-btn-press-color: rgba(150, 0, 0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 18%;
+        --wweb2-overlay-btn-padding: -1%;
+    }
+    .reset-btn {
+        text-decoration: none;
+        color: black;
+        width: 30pt;
+        aspect-ratio: 1;
+        align-content: center;
+        font-size: 7vw;
+        margin: 20pt;
+        --wweb2-overlay-btn-color: rgba(0, 0, 0, 0.0);
+        --wweb2-overlay-btn-press-color: rgba(150, 0, 0, 0.3);
+        --wweb2-overlay-btn-corner-radius: 50%;
+        --wweb2-overlay-btn-padding: -25% -50% -15% -50%;
+    }
+    .counter-value {
+        min-width: 15vw;
+        font-size: 10vw;
+        font-weight: bold;
+        margin: 20pt;
+        flex-grow: 2;        
+    }
+</style>
+
+<script type='text/javascript'>
+    function __wweb2WaitMillisecondsToWidgetIsReady(currentDelayMs) {
+        return 0;
+    }
+    // function __wweb2JsWidgetTitle(currentDelayMs) {
+    //     return "My Counter";
+    // }
+
+    function setCookie(c_name, value, exdays) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+        document.cookie = c_name + "=" + c_value;
+    }
+
+    function getCookie(c_name) {
+        var i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == c_name) {
+                return unescape(y);
+            }
+        }
+    }
+
+    let randValue = Date.now();
+    let counterValue = parseInt(getCookie("counterValue") || "0", 10)
+
+    function updateCounterValue() {
+        let valueEl = document.getElementById('counter_value');
+        if (valueEl) {
+            valueEl.textContent = counterValue+"";
+        }
+    }
+
+    function performPlusBtn() {
+        counterValue += 1;
+        setCookie("counterValue", counterValue+"", 365000);
+        updateCounterValue();
+    }
+
+    function performMinusBtn() {
+        counterValue -= 1;
+        setCookie("counterValue", counterValue+"", 365000);
+        updateCounterValue();
+    }
+
+    function performResetBtn() {
+        counterValue = 0;
+        setCookie("counterValue", counterValue+"", 365000);
+        updateCounterValue();
+    }
+
+    let queryString = window.location.hash;
+    if (queryString.startsWith("#")) {
+        queryString = queryString.substring(1)
+    }
+    const urlParams = new URLSearchParams(queryString);
+    const actionParam = urlParams.get('action');
+    if (actionParam) {
+        switch (actionParam) {
+            case "plus": {
+                performPlusBtn();
+            };break;
+            case "minus": {
+                performMinusBtn();
+            };break;
+            case "reset": {
+                performResetBtn();
+            };break;
+        }
+
+        urlParams.delete('action');
+    }
+</script>
+
+</head>
+<body>
+
+    <div class="row">
+        <a class="minus-btn" id="minus-btn" href="#action=minus" onclick="event.preventDefault(); performMinusBtn();">-</a>
+        <div class="column">
+            <p class="counter-value" id="counter_value">na</p>
+            <a class="reset-btn" id="reset_btn" href="#action=reset" onclick="event.preventDefault(); performResetBtn();">↺</a>
+        </div>
+        <a class="plus-btn" id="plus_btn" href="#action=plus" onclick="event.preventDefault(); performPlusBtn();">+</a>
+    </div>
+
+<script type='text/javascript'>
+    updateCounterValue();
+</script>
+
+</body>
+</html>

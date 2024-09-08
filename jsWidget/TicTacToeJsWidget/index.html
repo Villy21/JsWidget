@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tic-Tac-Toe - JS-Widget</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="js-widget-title" content="Tic-Tac-Toe">
+<style type="text/css">
+    body {
+        font-family: -apple-system,'Helvetica Neue';
+        background-color: white;
+        color: rgb(230, 230, 230);
+        text-align: center;
+        font-size: 13px;
+    }
+    h1 {
+        font-size: 2em;
+        font-weight: bold;
+        padding: 0;
+        margin: 0;
+        color: black;
+    }
+    h2 {
+        font-size: 1.3em;
+        font-weight: bold;
+        padding: 0;
+        margin: 0;
+        color: rgb(30, 30, 30);
+    }
+    h3 {
+        font-size: 1.1em;
+        padding: 0;
+        margin: 10px 0 2px 0;
+        color: rgb(30, 30, 30);
+    }
+    .main-container {
+        /* max-width: 600px;
+        margin-left: auto;
+        margin-right: auto; */
+        margin: 0 10pt;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20pt;
+    }
+
+    .game-field-container {
+        width: 100%;
+        aspect-ratio: 1;
+        /* overflow: hidden; */
+        border: 4px solid black;
+        border-radius: 20px;
+    }
+
+    .game-field {
+        width: 100%;
+        /* margin: 2% 2%; */
+        border-collapse: collapse;
+        /* position: relative; */
+        font-size: 120px;
+        border-style: hidden;
+    }
+    .game-field-td {
+        border: 4px solid black;
+        width: 33%;
+        position: relative;
+        padding: 0;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .game-cell {
+        aspect-ratio: 1;
+        /* line-height: 90%; */
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        container-type: inline-size;
+        text-decoration: none;
+        --wweb2-overlay-btn-color: rgba(0, 0, 0, 0.0);
+        --wweb2-overlay-btn-press-color: rgba(150,0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 10%;
+    }
+
+    .x {
+        color: darksalmon;
+        cursor: default;
+
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 100cqw;
+
+        display: flex;
+        height: 80%;
+        justify-content: center;
+        align-items: center;
+    }
+    .o {
+        color: aquamarine;
+        cursor: default;
+
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 100cqw;
+        
+        display: flex;
+        height: 80%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .game-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10pt;
+        margin-top: auto;
+        margin-bottom: auto;
+        /* position: relative; */
+    }
+
+    .start-game-btn {
+        font-size: 12pt;
+        text-decoration: none;
+        color: white;
+        background-color: green;
+        align-content: center;
+        border-radius: 10pt;
+        padding: 5pt 10pt;
+        cursor: pointer;
+        --wweb2-overlay-btn-color: rgba(0, 0, 0, 0.0);
+        --wweb2-overlay-btn-press-color: rgba(0, 150, 0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 18%;
+        --wweb2-overlay-btn-padding: -1%;
+    }
+
+    /* segment */
+    .segment {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: fit-content;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 1px solid gray;
+        background-color: gray;
+        border-radius: 10px;
+        
+        font-size: 1em;
+    }
+    .segment-left {
+        text-decoration: none;
+        color: black;
+        font-weight:normal;
+        background-color: gray;
+        align-content: center;
+        padding: 3pt 5pt;
+        margin: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        --wweb2-overlay-btn-color: rgba(0, 0, 0, 0.0);
+        --wweb2-overlay-btn-press-color: rgba(150,0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 18%;
+        --wweb2-overlay-btn-padding: -1%;
+    }
+    .segment-right {
+        text-decoration: none;
+        color: black;
+        font-weight:normal;
+        background-color: gray;
+        align-content: center;
+        padding: 3pt 5pt;
+        margin: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        --wweb2-overlay-btn-color: rgba(0, 0, 0, 0.0);
+        --wweb2-overlay-btn-press-color: rgba(150,0, 0.7);
+        --wweb2-overlay-btn-corner-radius: 18%;
+        --wweb2-overlay-btn-padding: -1%;
+    }
+    .segment-selected {
+        font-weight: bold;
+        background-color: white;
+    }
+
+    /* modal background */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* enable scroll if needed */
+        background-color: black; /* fallback color */
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    /* modal content */
+    .modal-content {
+        background-color: rgb(240, 240, 240);
+        color: rgb(32, 32, 32);
+        font-size: 1.5em;
+        font-weight: bold;
+        /* 16 % from the top and centered */
+        margin: 16% auto;
+        padding: 20px;
+        border: 2px solid black;
+        border-radius: 10px;
+        width: 380px;
+        max-width: 80%;
+    }
+    .modal-content p {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* scores table */
+    .scores {
+        padding-top: 20pt;
+        width: 70%;
+        grid-column: 1/3;
+        margin: auto;
+    }
+    
+    .scores_table {
+        width: 100%;
+        color: rgb(120, 120, 120);
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .win-color {
+        background-color: rgb(74, 212, 122);
+    }
+
+    .jswidget-btn-disabled {
+        --wweb2-overlay-btn-disabled: true;
+    }
+</style>
+<script type='text/javascript'>
+    function __wweb2WaitMillisecondsToWidgetIsReady(currentDelayMs) {
+        return 0;
+    }
+
+    function setCookie(c_name, value, exdays) {
+        let exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        let c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+        document.cookie = c_name + "=" + c_value;
+    }
+
+    function getCookie(c_name) {
+        let i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == c_name) {
+                return unescape(y);
+            }
+        }
+    }
+    function sumArray(array) {
+        let sum = 0, i = 0;
+        for (i = 0; i < array.length; i++) {
+            sum += array[i];
+        }
+        return sum;
+    }
+
+    function isInArray(element, array) {
+        if (array.indexOf(element) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    function shuffleArray(array) {
+        let counter = array.length, temp, index;
+        while (counter > 0) {
+            index = Math.floor(Math.random() * counter);
+            counter--;
+            temp = array[counter];
+            array[counter] = array[index];
+            array[index] = temp;
+        }
+        return array;
+    }
+
+    function intRandom(min, max) {
+        let rand = min + Math.random() * (max + 1 - min);
+        return Math.floor(rand);
+    }
+
+    // Grid
+    //=================
+    function Grid() {
+        this.cells = new Array(9);
+    }
+
+    // Get free cells in an array.
+    // Returns an array of indices in the original Grid.cells array, not the values
+    // of the array elements.
+    // Their values can be accessed as Grid.cells[index].
+    Grid.prototype.getFreeCellIndices = function () {
+        let i = 0, resultArray = [];
+        for (i = 0; i < this.cells.length; i++) {
+            if (this.cells[i] === 0) {
+                resultArray.push(i);
+            }
+        }
+        // console.log("resultArray: " + resultArray.toString());
+        // debugger;
+        return resultArray;
+    };
+
+    // Get a row (accepts 0, 1, or 2 as argument).
+    // Returns the values of the elements.
+    Grid.prototype.getRowValues = function (index) {
+        if (index !== 0 && index !== 1 && index !== 2) {
+            console.error("Wrong arg for getRowValues!");
+            return undefined;
+        }
+        let i = index * 3;
+        return this.cells.slice(i, i + 3);
+    };
+
+    // Get a row (accepts 0, 1, or 2 as argument).
+    // Returns an array with the indices, not their values.
+    Grid.prototype.getRowIndices = function (index) {
+        if (index !== 0 && index !== 1 && index !== 2) {
+            console.error("Wrong arg for getRowIndices!");
+            return undefined;
+        }
+        let row = [];
+        index = index * 3;
+        row.push(index);
+        row.push(index + 1);
+        row.push(index + 2);
+        return row;
+    };
+
+    // get a column (values)
+    Grid.prototype.getColumnValues = function (index) {
+        if (index !== 0 && index !== 1 && index !== 2) {
+            console.error("Wrong arg for getColumnValues!");
+            return undefined;
+        }
+        let i, column = [];
+        for (i = index; i < this.cells.length; i += 3) {
+            column.push(this.cells[i]);
+        }
+        return column;
+    };
+
+    // get a column (indices)
+    Grid.prototype.getColumnIndices = function (index) {
+        if (index !== 0 && index !== 1 && index !== 2) {
+            console.error("Wrong arg for getColumnIndices!");
+            return undefined;
+        }
+        let i, column = [];
+        for (i = index; i < this.cells.length; i += 3) {
+            column.push(i);
+        }
+        return column;
+    };
+
+    // get diagonal cells
+    // arg 0: from top-left
+    // arg 1: from top-right
+    Grid.prototype.getDiagValues = function (arg) {
+        let cells = [];
+        if (arg !== 1 && arg !== 0) {
+            console.error("Wrong arg for getDiagValues!");
+            return undefined;
+        } else if (arg === 0) {
+            cells.push(this.cells[0]);
+            cells.push(this.cells[4]);
+            cells.push(this.cells[8]);
+        } else {
+            cells.push(this.cells[2]);
+            cells.push(this.cells[4]);
+            cells.push(this.cells[6]);
+        }
+        return cells;
+    };
+
+    // get diagonal cells
+    // arg 0: from top-left
+    // arg 1: from top-right
+    Grid.prototype.getDiagIndices = function (arg) {
+        if (arg !== 1 && arg !== 0) {
+            console.error("Wrong arg for getDiagIndices!");
+            return undefined;
+        } else if (arg === 0) {
+            return [0, 4, 8];
+        } else {
+            return [2, 4, 6];
+        }
+    };
+
+    // Get first index with two in a row (accepts computer or player as argument)
+    Grid.prototype.getFirstWithTwoInARow = function (agent) {
+        if (agent !== state.computer && agent !== state.player) {
+            console.error("Function getFirstWithTwoInARow accepts only player or computer as argument.");
+            return undefined;
+        }
+        let sum = agent * 2, freeCells = shuffleArray(this.getFreeCellIndices());
+        for (let i = 0; i < freeCells.length; i++) {
+            for (let j = 0; j < 3; j++) {
+                let rowV = this.getRowValues(j);
+                let rowI = this.getRowIndices(j);
+                let colV = this.getColumnValues(j);
+                let colI = this.getColumnIndices(j);
+                if (sumArray(rowV) == sum && isInArray(freeCells[i], rowI)) {
+                    return freeCells[i];
+                } else if (sumArray(colV) == sum && isInArray(freeCells[i], colI)) {
+                    return freeCells[i];
+                }
+            }
+            for (j = 0; j < 2; j++) {
+                let diagV = this.getDiagValues(j);
+                let diagI = this.getDiagIndices(j);
+                if (sumArray(diagV) == sum && isInArray(freeCells[i], diagI)) {
+                    return freeCells[i];
+                }
+            }
+        }
+        return false;
+    };
+
+    Grid.prototype.reset = function () {
+        for (let i = 0; i < this.cells.length; i++) {
+            this.cells[i] = 0;
+        }
+        return true;
+    };
+
+    // GAME STATE
+    var state = {
+        needInit: true
+    }
+
+    if (state.needInit) {
+        state.needInit = false;
+        state.moves = 0;
+        state.winner = 0;
+        state.x = 1;
+        state.o = 3;
+        state.player = state.x;
+        state.computer = state.o;
+        state.whoseTurn = state.player;
+        state.gameOver = false;
+        state.score = {
+                    ties: 0,
+                    player: 0,
+                    computer: 0
+                },
+        state.xText = "<span class=\"x\">&times;</span>";
+        state.oText = "<span class=\"o\">o</span>";
+        state.playerText = state.xText;
+        state.computerText = state.oText;
+        state.difficulty = 1;
+        state.playerSideForNewGame = "x";
+
+        state.myGrid = new Grid();
+        state.myGrid.reset();
+    }
+
+    function saveGameState() {
+        let stateJson = JSON.stringify(state);
+        setCookie("gameState", stateJson, 365000);
+    }
+
+    function loadGameState() {
+        let stateJson = getCookie("gameState");
+        if (stateJson && !!stateJson.length) {
+            state = JSON.parse(stateJson);
+            if (state.myGrid) {
+                state.myGrid = Object.assign(new Grid(), state.myGrid);
+            }            
+        }
+    }
+
+    //==================================
+
+    // executed when the page loads
+    function initialize() {
+        loadGameState();
+        if (state.gameOver) {
+            restartGame();
+        }
+        showCurrentOptions();
+        restoreGameField();
+        updateStatistics();
+
+        processJsWidgetActions()
+        // debugger;
+    }
+
+    function restoreGameField() {
+        for (let i = 0; i <= 8; i++) {
+            let id = "cell" + i.toString();
+            const cell = state.myGrid.cells[i];
+            if (cell == state.computer) {
+                document.getElementById(id).innerHTML = state.computerText;
+                document.getElementById(id).classList.add("jswidget-btn-disabled"); // set to prevent highlight already selected btn
+            }
+            else if (cell == state.player) {
+                document.getElementById(id).innerHTML = state.playerText;
+                document.getElementById(id).classList.add("jswidget-btn-disabled"); // set to prevent highlight already selected btn
+            }
+            else {
+                document.getElementById(id).innerHTML = "";
+                document.getElementById(id).classList.remove("jswidget-btn-disabled");
+            }
+            document.getElementById(id).classList.remove("win-color");
+        }
+    }
+
+    function disableAllGameFieldJsWidgetBtn() {
+        for (let i = 0; i <= 8; i++) {
+            let id = "cell" + i.toString();
+            document.getElementById(id).classList.add("jswidget-btn-disabled"); // set to prevent press already selected btn
+        }
+    }
+
+    function processJsWidgetActions() {
+        // process buttons press in jswidget
+        let queryString = window.location.hash;
+        if (queryString.startsWith("#")) {
+            queryString = queryString.substring(1)
+        }
+        const urlParams = new URLSearchParams(queryString);
+        const actionParam = urlParams.get('action');
+        if (actionParam) {
+            if (actionParam.startsWith("cell")) {
+                cellClicked(actionParam);
+            }
+            else {
+                switch (actionParam) {
+                    case "startPlay": {
+                        startNewGame();
+                    };break;
+                    case "setDifficulty0": {
+                        setDifficulty(0);
+                    };break;
+                    case "setDifficulty1": {
+                        setDifficulty(1);
+                    };break;
+                    case "playAsX": {
+                        setPlayerSideForNewGame('x');
+                    };break;
+                    case "playAsO": {
+                        setPlayerSideForNewGame('o');
+                    };break;
+                }
+            }
+        }
+    }
+
+    function updateStatistics() {
+        document.getElementById("computer_score").innerHTML = state.score.computer + "";
+        document.getElementById("tie_score").innerHTML = state.score.ties + "";
+        document.getElementById("player_score").innerHTML = state.score.player + "";
+    }
+
+    // executed when player clicks one of the table cells
+    function cellClicked(id) {
+        // The last character of the id corresponds to the numeric index in Grid.cells:
+        let idName = id.toString();
+        let cell = parseInt(idName[idName.length - 1]);
+        if (state.myGrid.cells[cell] > 0 || state.whoseTurn !== state.player || state.gameOver) {
+            // cell is already occupied or something else is wrong
+            return false;
+        }
+        state.moves += 1;
+        document.getElementById(id).innerHTML = state.playerText;
+        document.getElementById(id).classList.add("jswidget-btn-disabled"); // set to prevent highlight already selected btn
+
+        // randomize orientation (for looks only)
+        state.myGrid.cells[cell] = state.player;
+        // Test if we have a winner:
+        if (state.moves >= 5) {
+            state.winner = checkWin();
+        }
+        if (state.winner === 0) {
+            state.whoseTurn = state.computer;
+            makeComputerMove();
+        }
+        saveGameState();
+        return true;
+    }
+
+    // Executed when player hits restart button.
+    // ask should be true if we should ask users if they want to play as X or O
+    function restartGame() {
+        state.gameOver = false;
+        state.moves = 0;
+        state.winner = 0;
+        state.whoseTurn = state.x;
+        state.myGrid.reset();
+        restoreGameField();
+        if (state.whoseTurn == state.computer) {
+            makeComputerMove();
+        }
+        saveGameState();
+    }
+
+    // The core logic of the game AI:
+    function makeComputerMove() {
+        // debugger;
+        if (state.gameOver) {
+            return false;
+        }
+        let cell = -1, myArr = [], corners = [0,2,6,8];
+        if (state.moves >= 3) {
+            cell = state.myGrid.getFirstWithTwoInARow(state.computer);
+            if (cell === false) {
+                cell = state.myGrid.getFirstWithTwoInARow(state.player);
+            }
+            if (cell === false) {
+                if (state.myGrid.cells[4] === 0 && state.difficulty == 1) {
+                    cell = 4;
+                } else {
+                    myArr = state.myGrid.getFreeCellIndices();
+                    cell = myArr[intRandom(0, myArr.length - 1)];
+                }
+            }
+            // Avoid a catch-22 situation:
+            if (state.moves == 3 && state.myGrid.cells[4] == state.computer && state.player == state.x && state.difficulty == 1) {
+                if (state.myGrid.cells[7] == state.player && (state.myGrid.cells[0] == state.player || state.myGrid.cells[2] == state.player)) {
+                    myArr = [6,8];
+                    cell = myArr[intRandom(0,1)];
+                }
+                else if (state.myGrid.cells[5] == state.player && (state.myGrid.cells[0] == state.player || state.myGrid.cells[6] == state.player)) {
+                    myArr = [2,8];
+                    cell = myArr[intRandom(0,1)];
+                }
+                else if (state.myGrid.cells[3] == state.player && (state.myGrid.cells[2] == state.player || state.myGrid.cells[8] == state.player)) {
+                    myArr = [0,6];
+                    cell = myArr[intRandom(0,1)];
+                }
+                else if (state.myGrid.cells[1] == state.player && (state.myGrid.cells[6] == state.player || state.myGrid.cells[8] == state.player)) {
+                    myArr = [0,2];
+                    cell = myArr[intRandom(0,1)];
+                }
+            }
+            else if (state.moves == 3 && state.myGrid.cells[4] == state.player && state.player == state.x && state.difficulty == 1) {
+                if (state.myGrid.cells[2] == state.player && state.myGrid.cells[6] == state.computer) {
+                    cell = 8;
+                }
+                else if (state.myGrid.cells[0] == state.player && state.myGrid.cells[8] == state.computer) {
+                    cell = 6;
+                }
+                else if (state.myGrid.cells[8] == state.player && state.myGrid.cells[0] == state.computer) {
+                    cell = 2;
+                }
+                else if (state.myGrid.cells[6] == state.player && state.myGrid.cells[2] == state.computer) {
+                    cell = 0;
+                }
+            }
+        } else if (state.moves === 1 && state.myGrid.cells[4] == state.player && state.difficulty == 1) {
+            // if player is X and played center, play one of the corners
+            cell = corners[intRandom(0,3)];
+        } else if (state.moves === 2 && state.myGrid.cells[4] == state.player && state.computer == state.x && state.difficulty == 1) {
+            // if player is O and played center, take two opposite corners
+            if (state.myGrid.cells[0] == state.computer) {
+                cell = 8;
+            }
+            else if (state.myGrid.cells[2] == state.computer) {
+                cell = 6;
+            }
+            else if (state.myGrid.cells[6] == state.computer) {
+                cell = 2;
+            }
+            else if (state.myGrid.cells[8] == state.computer) {
+                cell = 0;
+            }
+        } else if (state.moves === 0 && intRandom(1,10) < 8) {
+            // if computer is X, start with one of the corners sometimes
+            cell = corners[intRandom(0,3)];
+        } else {
+            // choose the center of the board if possible
+            if (state.myGrid.cells[4] === 0 && state.difficulty == 1) {
+                cell = 4;
+            } else {
+                myArr = state.myGrid.getFreeCellIndices();
+                cell = myArr[intRandom(0, myArr.length - 1)];
+            }
+        }
+        let id = "cell" + cell.toString();
+        // console.log("computer chooses " + id);
+        document.getElementById(id).innerHTML = state.computerText;
+        document.getElementById(id).classList.add("jswidget-btn-disabled"); // set to prevent highlight already selected btn
+        state.myGrid.cells[cell] = state.computer;
+        state.moves += 1;
+        if (state.moves >= 5) {
+            state.winner = checkWin();
+        }
+        if (state.winner === 0 && !state.gameOver) {
+            state.whoseTurn = state.player;
+        }
+    }
+
+    // Check if the game is over and determine winner
+    function checkWin() {
+        state.winner = 0;
+
+        // rows
+        for (let i = 0; i <= 2; i++) {
+            let row = state.myGrid.getRowValues(i);
+            if (row[0] > 0 && row[0] == row[1] && row[0] == row[2]) {
+                if (row[0] == state.computer) {
+                    state.score.computer++;
+                    state.winner = state.computer;
+                    // console.log("computer wins");
+                } else {
+                    state.score.player++;
+                    state.winner = state.player;
+                    // console.log("player wins");
+                }
+                // Give the winning row/column/diagonal a different bg-color
+                let tmpAr = state.myGrid.getRowIndices(i);
+                for (let j = 0; j < tmpAr.length; j++) {
+                    let str = "cell" + tmpAr[j];
+                    document.getElementById(str).classList.add("win-color");
+                }
+                endGame(state.winner);
+                return state.winner;
+            }
+        }
+
+        // columns
+        for (i = 0; i <= 2; i++) {
+            let col = state.myGrid.getColumnValues(i);
+            if (col[0] > 0 && col[0] == col[1] && col[0] == col[2]) {
+                if (col[0] == state.computer) {
+                    state.score.computer++;
+                    state.winner = state.computer;
+                    // console.log("computer wins");
+                } else {
+                    state.score.player++;
+                    state.winner = state.player;
+                    // console.log("player wins");
+                }
+                // Give the winning row/column/diagonal a different bg-color
+                let tmpAr = state.myGrid.getColumnIndices(i);
+                for (let j = 0; j < tmpAr.length; j++) {
+                    let str = "cell" + tmpAr[j];
+                    document.getElementById(str).classList.add("win-color");
+                }
+                endGame(state.winner);
+                return state.winner;
+            }
+        }
+
+        // diagonals
+        for (i = 0; i <= 1; i++) {
+            let diagonal = state.myGrid.getDiagValues(i);
+            if (diagonal[0] > 0 && diagonal[0] == diagonal[1] && diagonal[0] == diagonal[2]) {
+                if (diagonal[0] == state.computer) {
+                    state.score.computer++;
+                    state.winner = state.computer;
+                    // console.log("computer wins");
+                } else {
+                    state.score.player++;
+                    state.winner = state.player;
+                    // console.log("player wins");
+                }
+                // Give the winning row/column/diagonal a different bg-color
+                let tmpAr = state.myGrid.getDiagIndices(i);
+                for (let j = 0; j < tmpAr.length; j++) {
+                    let str = "cell" + tmpAr[j];
+                    document.getElementById(str).classList.add("win-color");
+                }
+                endGame(state.winner);
+                return state.winner;
+            }
+        }
+
+        // If we haven't returned a winner by now, if the board is full, it's a tie
+        let myArr = state.myGrid.getFreeCellIndices();
+        if (myArr.length === 0) {
+            state.winner = 10;
+            state.score.ties++;
+            endGame(state.winner);
+            return state.winner;
+        }
+
+        return state.winner;
+    }
+
+    function announceWinner(text) {
+        disableAllGameFieldJsWidgetBtn();// hide buttons uder winner announce div
+        document.getElementById("winText").innerHTML = text;
+        document.getElementById("winAnnounce").style.display = "block";
+    }
+    function closeWinner() {
+        document.getElementById("winAnnounce").style.display = "none";
+    }
+
+    function showCurrentOptions() {
+        showCurrentDifficulty();
+        showCurrentPlayerSide();
+    }
+
+    function setPlayerSideForNewGame(playerSide) {
+        state.playerSideForNewGame = playerSide;
+        saveGameState();
+        showCurrentPlayerSide();
+        startNewGame();
+    }
+    function showCurrentPlayerSide() {
+        document.getElementById("playerAsX").classList.remove("segment-selected");
+        document.getElementById("playerAsO").classList.remove("segment-selected");
+        if (state.playerSideForNewGame == "x") {
+            document.getElementById("playerAsX").classList.add("segment-selected");
+        }
+        else { // O
+            document.getElementById("playerAsO").classList.add("segment-selected");
+        }
+    }
+
+    function setDifficulty(difficulty) {
+        state.difficulty = difficulty;
+        saveGameState();
+        showCurrentDifficulty();
+        startNewGame();
+    }
+    function showCurrentDifficulty() {
+        document.getElementById("difficulty0").classList.remove("segment-selected");
+        document.getElementById("difficulty1").classList.remove("segment-selected");
+        if (state.difficulty == 0) { // easy
+            document.getElementById("difficulty0").classList.add("segment-selected");
+        }
+        else { // hard
+            document.getElementById("difficulty1").classList.add("segment-selected");
+        }
+    }
+    
+
+    function updatePlayerSize() {
+        if (state.playerSideForNewGame == "x") {
+            state.player = state.x;
+            state.computer = state.o;
+            state.whoseTurn = state.player;
+            state.playerText = state.xText;
+            state.computerText = state.oText;
+        }
+        else {
+            state.player = state.o;
+            state.computer = state.x;
+            state.whoseTurn = state.computer;
+            state.playerText = state.oText;
+            state.computerText = state.xText;
+        }
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+    }
+
+    function startNewGame() {
+        closeWinner();
+        updatePlayerSize();
+        restartGame();
+        saveGameState();
+    }
+
+    function endGame(whoWin) {
+        if (whoWin == state.player) {
+            announceWinner("Congratulations, you won!");
+        } 
+        else if (whoWin == state.computer) {
+            announceWinner("Computer wins!");
+        } 
+        else {
+            announceWinner("It's a tie!");
+        }
+        state.gameOver = true;
+        state.whoseTurn = 0;
+        state.moves = 0;
+        state.winner = 0;
+        updateStatistics();
+        saveGameState();
+    }
+</script>
+</head>
+
+<body onload="initialize()">
+    <div class="main-container">
+        <div class="game-field-container">
+            <table class="game-field">
+                <tr>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell0" href="#action=cell0" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell1" href="#action=cell1" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell2" href="#action=cell2" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell3" href="#action=cell3" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell4" href="#action=cell4" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell5" href="#action=cell5" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell6" href="#action=cell6" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell7" href="#action=cell7" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                    <td class="game-field-td">
+                        <a class="game-cell" id="cell8" href="#action=cell8" onclick="event.preventDefault(); cellClicked(this.id);"></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="options" class="game-options">
+            <h1>Tic-Tac-Toe</h1>
+
+            <div class="segment">
+                <a id="difficulty0" class="segment-left" href="#action=setDifficulty0" onclick="event.preventDefault(); setDifficulty(0);">Easy</a>
+                <a id="difficulty1" class="segment-right" href="#action=setDifficulty1" onclick="event.preventDefault(); setDifficulty(1);">Hard</a>
+            </div>
+
+            <div class="segment">
+                <a id="playerAsX" class="segment-left" href="#action=playAsX" onclick="event.preventDefault(); setPlayerSideForNewGame('x');">Play as X</a>
+                <a id="playerAsO" class="segment-right" href="#action=playAsO" onclick="event.preventDefault(); setPlayerSideForNewGame('o');">Play as O</a>
+            </div>
+
+            <a id="okBtn" class="start-game-btn" href="#action=startPlay" onclick="event.preventDefault(); startNewGame();">Start New Game</a>
+        </div>
+
+        <div class="scores">
+            <h3>Game Score</h3>
+            <table class="scores_table">
+                <tr>
+                    <th>Computer</th>
+                    <th>Draws</th>
+                    <th>Player</th>
+                </tr>
+                <tr>
+                    <td id="computer_score">0</td>
+                    <td id="tie_score">0</td>
+                    <td id="player_score">0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- The modal dialog for announcing the winner -->
+    <div id="winAnnounce" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <p id="winText"></p>
+            <p style="padding-top: 20pt;">
+                <a id="okBtn" class="start-game-btn" onclick="event.preventDefault(); startNewGame();">Start New Game</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
