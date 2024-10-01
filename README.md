@@ -10,6 +10,28 @@ The JS-Widgets feature will always be free for all.
 If you have developed your own JS-Widget and want to share it with others, you can distribute the URL to people and they will use it in the [iOS WidgetWeb App](https://apps.apple.com/app/widget-web/id1522169352).  
 Or you can write to [me](mailto:supporrt.vitalek.app@gmail.com) to add this URL to the [iOS WidgetWeb App](https://apps.apple.com/app/widget-web/id1522169352) JS-Widgets list.
 
+# Debugging your own JS-Widgets
+
+In the [WidgetWeb](https://apps.apple.com/app/widget-web/id1522169352) App menu, you can enable Developer mode.  
+In this mode you can view the logs of your JS-Widget.  
+Use `__wweb2Log("message")` to send to log from js code.
+
+```js
+---------------------------------------------------------------------------
+19:24:44.280| @@App::applicationDidFinishLaunching: Version:7.1 (5758)
+19:24:44.506| @@App::applicationDidBecomeActive
+19:33:15.764| @@Start Load URL=https://vitalek.app/jsWidget/CounterJsWidget/index.html
+19:33:15.907| @@++WebPage load progress:10.0 %
+19:33:16.167| @@++WebPage load progress:50.0 %
+19:33:16.179| @@++WebPage load progress:100.0 %
+19:33:16.194| __wweb2WaitMillisecondsToWidgetIsReady(currentDelayMs=1000) found -> return new delay, msec: 0
+19:33:16.300| __wweb2WaitMillisecondsToWidgetIsReady(currentDelayMs=0) found -> return new delay, msec: 0
+19:33:16.405| @@++WebPage is ready
+19:33:21.410| @@WEB2-LOG: findAllWidgetButtons. buttonIndex:0 rect:[x=26.65625 y=26.65625 width=336.53125 height=336.53125] style={"selfColor":"rgb(0, 0, 0)","wwebBtnColor":"","wwebBtnPressColor":"rgba(150, 0, 0, 0.7)","wwebBtnCornerRadius":"18","wwebBtnPadding":"-1","wwebBtnDisabled":""} tagName=A fastJsButtonURLStr= https://vitalek.app/jsWidget/CounterJsWidget/index.html#action=minus
+19:33:21.410| @@WEB2-LOG: findAllWidgetButtons. buttonIndex:1 rect:[x=461.2101135253906 y=239.078125 width=57.579803466796875 height=83] style={"selfColor":"rgb(0, 0, 0)","wwebBtnColor":"rgba(0, 0, 0, 0)","wwebBtnPressColor":"rgba(150, 0, 0, 0.3)","wwebBtnCornerRadius":"50","wwebBtnPadding":"-25 -50% -15 -50%","wwebBtnDisabled":""} tagName=A fastJsButtonURLStr= https://vitalek.app/jsWidget/CounterJsWidget/index.html#action=reset
+19:33:21.410| @@WEB2-LOG: findAllWidgetButtons. buttonIndex:2 rect:[x=616.8125 y=26.65625 width=336.53125 height=336.53125] style={"selfColor":"rgb(0, 0, 0)","wwebBtnColor":"","wwebBtnPressColor":"rgba(0, 150, 0, 0.7)","wwebBtnCornerRadius":"18","wwebBtnPadding":"-1","wwebBtnDisabled":""} tagName=A fastJsButtonURLStr= https://vitalek.app/jsWidget/CounterJsWidget/index.html#action=plus
+```
+
 # How JS-Widgets work
 
 The JS-Widget web page runs in a WKWebView (Safari) inside an iOS widget.  
