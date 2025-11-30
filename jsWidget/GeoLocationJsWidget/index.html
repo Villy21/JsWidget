@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>GeoLocation - JS-Widget</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="js-widget-title" content="GeoLocation">
+
+  <style>
+    body {
+      font-family: -apple-system, 'Helvetica Neue';
+      color: black;
+      display: block;
+      text-align: center;
+      font-size: 5vw;
+      font-weight: bold;
+      margin: 0;
+      width: 100%;
+    }
+
+    .status {
+      padding-top: 40pt;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="status" class="status"></div>
+
+  <script>
+    if (typeof __wweb2Log === 'undefined') { // to work without WidgetWeb
+      __wweb2Log = (str) => {
+        console.log(str);
+      }
+    }
+
+    const FALLBACK_LOCATION = { latitude: 51.4826, longitude: 0.1016 }; // Greenwich location
+
+    const el = id => document.getElementById(id);
+
+    const showStatus = msg => el('status').textContent = msg || '';
+    const showHtmlStatus = msg => el('status').innerHTML = msg || '';
+
+    async function showLocation(type, lat, lon) {
+      __wweb2Log?.(`showLocation: type:${type} lat:${lat} lon:${lon}`);
+      try {
+        const now = new Date();
+        showHtmlStatus(`${type} </br></br> ${now.toLocaleString()} </br></br> Lat:${lat} Lon:${lon}`);
+      } catch (err) {
+        showStatus("Error showLocation response");
+        __wweb2Log?.(`Error:${err}`);
+      }
+    }
+
+    async function getCurrentPosition() {
+      return new Promise((resolve, reject) => {
+        if (!('geolocation' in navigator))
+          return reject("Browser not support Geolocation");
+
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({
+            latitude: pos.coords.latitude.toFixed(3),
+            longitude: pos.coords.longitude.toFixed(3)
+          }),
+          (error) => reject(`Location rejected: (${error.code}) ${error.message}`),
+          { timeout: 10000 }
+        );
+      });
+    }
+
+    async function loadLocation() {
+      __wweb2Log?.("Start loadLocation()");
+
+      showStatus('Geo Location Requested...');
+      try {
+        const { latitude, longitude } = await getCurrentPosition();
+        await showLocation("REAL LOCATION", latitude, longitude);
+      } catch (err) {
+        __wweb2Log?.(`Show Fallback Location. Error:${err}`);
+        await showLocation(`${err} -> FALLBACK LOCATION`, FALLBACK_LOCATION.latitude.toFixed(3), FALLBACK_LOCATION.longitude.toFixed(3));
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadLocation();
+    });
+  </script>
+</body>
+
+</html>
