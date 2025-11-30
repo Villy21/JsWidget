@@ -10,6 +10,12 @@ The JS-Widgets feature will always be free for all.
 If you have developed your own JS-Widget and want to share it with others, you can distribute the URL to people and they will use it in the [iOS WidgetWeb App](https://apps.apple.com/app/widget-web/id1522169352).  
 Or you can write to [me](mailto:supporrt.vitalek.app@gmail.com) to add this URL to the [iOS WidgetWeb App](https://apps.apple.com/app/widget-web/id1522169352) JS-Widgets list.
 
+## Samples
+
+* [CounterJsWidget](jsWidget/CounterJsWidget) — an example of creating buttons and storing values ​​for reuse in a JS-Widget.
+* [TicTacToeJsWidget](jsWidget/TicTacToeJsWidget) — an example of creating a game in a JS-Widget.
+* [GeoLocationJsWidget](jsWidget/GeoLocationJsWidget) — an example of using geolocation in a JS-Widget. **IMPORTANT:** The first time you use the JavaScript Geo API in a widget, iOS will prompt you for location permission on the iOS home screen. If you skip this prompt, you can manually configure permissions in iOS Settings -> WidgetWeb.
+
 # Debugging your own JS-Widgets
 
 In the [WidgetWeb](https://apps.apple.com/app/widget-web/id1522169352) App menu, you can enable Developer mode.  
