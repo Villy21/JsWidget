@@ -12,9 +12,9 @@ Or you can write to [me](mailto:supporrt.vitalek.app@gmail.com) to add this URL 
 
 ## Samples
 
-* [CounterJsWidget](jsWidget/CounterJsWidget) — an example of creating buttons and storing values ​​for reuse in a JS-Widget.
-* [TicTacToeJsWidget](jsWidget/TicTacToeJsWidget) — an example of creating a game in a JS-Widget.
-* [GeoLocationJsWidget](jsWidget/GeoLocationJsWidget) — an example of using geolocation in a JS-Widget. **IMPORTANT:** The first time you use the JavaScript Geo API in a widget, iOS will prompt you for location permission on the iOS home screen. If you skip this prompt, you can manually configure permissions in iOS Settings -> WidgetWeb.
+* [CounterJsWidget](jsWidget/CounterJsWidget) — an example of creating buttons and storing values ​​for reuse in a JS-Widget. [link for testing in a browser](https://vitalek.app/jsWidget/CounterJsWidget/index.html)
+* [TicTacToeJsWidget](jsWidget/TicTacToeJsWidget) — an example of creating a game in a JS-Widget. [link for testing in a browser](https://vitalek.app/jsWidget/TicTacToeJsWidget/index.html)
+* [GeoLocationJsWidget](jsWidget/GeoLocationJsWidget) — an example of using geolocation in a JS-Widget. **IMPORTANT:** The first time you use the JavaScript Geo API in a widget, iOS will prompt you for location permission on the iOS home screen. If you skip this prompt, you can manually configure permissions in iOS Settings -> WidgetWeb. [link for testing in a browser](https://vitalek.app/jsWidget/GeoLocationJsWidget/index.html)
 
 # Debugging your own JS-Widgets
 
